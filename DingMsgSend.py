@@ -28,18 +28,18 @@ def sub_function():
                                              sSQL)
     # print(row_count)
     count = row_count[0]
-    print(count)
+    # print(count)
 
     #订单条数
     sSQL1 = "select count(*) from pushmessagecache a inner join zlapptpappconfigmapping b on a.tpapptype = b.tpapptype and a.tpappauthkey = b.tpappauthkey where b.zlusercode = '105'"
     row_count1 = SQLExec.int_exec(s_server, s_port, s_user, s_password, s_database,
                                              sSQL1)
-    print(row_count1)
+    # print(row_count1)
     count1 = row_count1[0]
     # print("24小时格式：" + time.strftime("%H:%M"))
     if  count == '':
         print("很棒，没问题")
-    elif count > 20 :
+    elif int(count) > 20 :
         msg = ''
         msg = "长沙多喜来" + msg + ": 存在20分钟前订单未推送；待推送订单条数：" + str(count1)
         # print(msg)
