@@ -3,46 +3,53 @@ import DingTalkRobot
 import ConstSettings
 import Common.Const
 CONST = Common.Const
+import datetime
+import time
 
 
 def sub_function():
-    #将字段客户通道转为两个列表，分别为客户名称、客户CODE
-    names = list(ConstSettings.CONST.TONGDAO_CODE.keys())
-    codes = list(ConstSettings.CONST.TONGDAO_CODE.values())
-    chans = CONST.TONGDAO_CHAINS
-    # print(chans)
+    #第三方代理库地址（正式环境）
+    s_server = '39.108.58.237'
+    s_port = '1433'
+    s_database = 'TpO2OProxyConfigDB'
+    s_user = 'sa'
+    s_password = 'Zl84519741'
+    # 第三方代理库地址（测试环境）
+    # s_server = '123.57.226.114'
+    # s_port = '2433'
+    # s_database = '20171012FBProxy'
+    # s_user = 'sa'
+    # s_password = '84519741'
 
-    # 通道库地址，两个通道库：
-    for i in range(0, 2):
-        # print(i)
-        s_server = CONST.TONGDAO_SERVER[i]
-        s_port = CONST.TONGDAO_PORT[i]
-        s_database = CONST.TONGDAO_DATABASE[i]
-        s_user = CONST.TONGDAO_USER[i]
-        s_password = CONST.TONGDAO_PASSWORD[i]
-        # print(s_server)
-
-        for name in names:
-            # print(name)
-            code = ConstSettings.CONST.TONGDAO_CODE[name]
-            # print(code)
-            row_count = 0
-
-            for chan in chans:
-                # print(chan)
-                sSQL = 'select * from [dtv5dtchdan' + code + '_' + chan + ']'
-                # print(sSQL)
-                row_count = row_count + SQLExec.int_exec(s_server, s_port, s_user, s_password, s_database,
+    sSQL = "select  datediff( MINUTE,min(a.updatetime),GETDATE()) from pushmessagecache a inner join zlapptpappconfigmapping b on a.tpapptype = b.tpapptype and a.tpappauthkey = b.tpappauthkey where b.zlusercode = '105'"
+    # print(sSQL)
+    #订单时间
+    row_count = SQLExec.int_exec(s_server, s_port, s_user, s_password, s_database,
                                              sSQL)
-                # print(row_count)
+    # print(row_count)
+    count = row_count[0]
+    print(count)
 
-            #增加判断，待接收数据包大于等于10才提示
-            if row_count >= 10 :
-                count = row_count
-                msg = ''
-                msg = "tongd" + str(i) + "_" + msg + name +  ": 业务数据仓库待接收数据包：" + str(count)
-                # print(msg)
-                DingTalkRobot.send_text(msg)
+    #订单条数
+    sSQL1 = "select count(*) from pushmessagecache a inner join zlapptpappconfigmapping b on a.tpapptype = b.tpapptype and a.tpappauthkey = b.tpappauthkey where b.zlusercode = '105'"
+    row_count1 = SQLExec.int_exec(s_server, s_port, s_user, s_password, s_database,
+                                             sSQL1)
+    print(row_count1)
+    count1 = row_count1[0]
+    # print("24小时格式：" + time.strftime("%H:%M"))
+    if  count == '':
+        print("很棒，没问题")
+    elif count > 20 :
+        msg = ''
+        msg = "长沙多喜来" + msg + ": 存在20分钟前订单未推送；待推送订单条数：" + str(count1)
+        # print(msg)
+        DingTalkRobot.send_text(msg)
+    else :
+        print("订单未达20分钟，忽略")
+
+
+
+
 
 
 

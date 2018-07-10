@@ -12,13 +12,24 @@ def main():
     print("Begin")
     ConstSettings.define()
     counter = 0
-    while counter < 10000:
+    #获取当前时分
+    t = time.strftime("%H:%M")
+    # print(t)
+    #开始执行时间
+    a = '07:50'
+    #结束执行时间
+    b = '20:10'
+    while a < t < b:
         DingMsgSend.sub_function()
         counter = counter + 1
         i = datetime.datetime.now()
         print(str(i) + " " + str(counter))
-        #查询时间
-        time.sleep(86400)
+        #间隔查询时间，秒
+        time.sleep(1200)
+        t = time.strftime("%H:%M")
+    else:
+        print("该时段无需执行")
+
     print("End")
 
 
