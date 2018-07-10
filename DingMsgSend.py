@@ -37,13 +37,13 @@ def sub_function():
     # print(row_count1)
     count1 = row_count1[0]
     # print("24小时格式：" + time.strftime("%H:%M"))
-    if  count == '':
+    if count == None:
         print("很棒，没问题")
-    elif int(count) > 20 :
+    elif count > 20 :
         msg = ''
         msg = "长沙多喜来" + msg + ": 存在20分钟前订单未推送；待推送订单条数：" + str(count1)
-        # print(msg)
-        DingTalkRobot.send_text(msg)
+        print(msg)
+        # # DingTalkRobot.send_text(msg)
     else :
         print("订单未达20分钟，忽略")
 
